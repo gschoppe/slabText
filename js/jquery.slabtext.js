@@ -6,7 +6,11 @@
         var settings = {
             // The ratio used when calculating the characters per line 
             // (parent width / (font-size * fontRatio)). 
-            "fontRatio"             : 0.78,
+            "fontRatio"             : 0.44518217,
+            // The ratio between ideal width and ideal height
+            "boxRatio"              : 1,
+            // is the height fixed in css?
+            "fixedHeight"           : false,
             // Always recalculate the characters per line, not just when the 
             // font-size changes? Defaults to true (CPU intensive)
             "forceNewCharCount"     : true,
@@ -45,6 +49,8 @@
                 origFontSize        = null,
                 idealCharPerLine    = null,
                 fontRatio           = settings.fontRatio,
+                boxRatio            = settings.boxRatio,
+                fixedHeight         = settings.boxHeight,
                 forceNewCharCount   = settings.forceNewCharCount,
                 headerBreakpoint    = settings.headerBreakpoint,
                 viewportBreakpoint  = settings.viewportBreakpoint,
@@ -77,6 +83,7 @@
                     
                 // Cache the parent containers width       
                 var parentWidth = $this.width(),
+                    parentHeight = (fixedHeight)?$this.height():parentWidth/boxRatio,
                     fs;
                 
                 // Remove the slabtextdone and slabtextinactive classnames to enable the inline-block shrink-wrap effect
@@ -98,14 +105,24 @@
                 if(!keepSpans && (forceNewCharCount || fs != origFontSize)) {
                             
                     origFontSize = fs;
+                    /*
+                    public function formatInscription(rect:Rectangle, useMargin:Boolean):Void {
+                    // calculate height of the ’ideal’ line 
+                    var idealLineAspectRatio:Number = PS.fontInfo.altGoth3D.aspectRatio * PS.fontInfo.altGoth3D.idealLineLength;
                     
-                    var newCharPerLine      = Math.min(60, Math.floor(parentWidth / (origFontSize * fontRatio))),
-                        wordIndex           = 0,
-                        lineText            = [],
-                        counter             = 0,                                                                        
-                        preText             = "",
-                        postText            = "",
-                        finalText           = "",
+                    */
+
+                    var textLength = words.join(" ").length,
+                        idealLineLength = 12,
+                        idealLineHeight = parentWidth/(idealLineLength*fontRatio),
+                        lineCount       = Math.floor(parentHeight/idealLineHeight),
+                        newCharPerLine  = Math.min(60, Math.max(Math.round(textLength/lineCount), 1)),
+                        wordIndex       = 0,
+                        lineText        = [],
+                        counter         = 0,
+                        preText         = "",
+                        postText        = "",
+                        finalText       = "",
                         slice,
                         preDiff,
                         postDiff;
