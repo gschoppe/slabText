@@ -105,12 +105,6 @@
                 if(!keepSpans && (forceNewCharCount || fs != origFontSize)) {
                             
                     origFontSize = fs;
-                    /*
-                    public function formatInscription(rect:Rectangle, useMargin:Boolean):Void {
-                    // calculate height of the ’ideal’ line 
-                    var idealLineAspectRatio:Number = PS.fontInfo.altGoth3D.aspectRatio * PS.fontInfo.altGoth3D.idealLineLength;
-                    
-                    */
 
                     var textLength = words.join(" ").length,
                         idealLineLength = 12,
